@@ -2,19 +2,28 @@ import requiresAuth from "../AuthHOC";
 import checkBoarded from "../CheckBoardedHOC";
 import websiteContext from "../WebsiteContextHOC";
 
+const CheckedWelcome = composeComponents(Welcome, [
+    c => checkBoarded(c, { withValue: true, redirectTo: '/app/dashboard'}),
+    c => requiresAuth(c)
+])
+
+const CheckedApp = composeComponents(App, [
+    c => checkBoarded(c, { withValue: false, redirectTo: '/welcome-on-board'}),
+    c => requiresAuth(c),
+    c => requiresSmth(c, { options: {} })
+])
+
 const routes = (
     <Route path=''>
         <Route path='/signup' component={SignUp} />
         <Route path='/signin' component={SignIn} />
 
-        <Route path='/welcome-on-board' 
-            component={checkBoarded(Welcome, { withValue: true, redirectTo: '/app/dashboard'})} />
+        <Route path='/welcome-on-board' component={CheckedWelcome} />
 
         <Route path='forgot-password' component={ForgotWelcome} />
         <Route path='/signout' component={SignOut} />
 
-        <Route path='/app' 
-            component={checkBoarded(requiresAuth(App), { withValue: false, redirectTo: '/welcome-on-board'})}>
+        <Route path='/app' component={CheckedApp}>
             <Route name='dashboard' path='dashboard' component={Dashboard} />
             <Route name='profile' path='profile' component={UserProfile} />
 
@@ -29,3 +38,7 @@ const routes = (
         <Route path='*' component={FourOFour} status={404} />
     </Route>
 )
+
+export function composeComponents(component, wrappers = []) {
+    return wrappers.reduce((c, wrapper) => wrapper(c), component)
+}
