@@ -18,10 +18,11 @@ export default function requiresAuth(Component) {
         }
 
         _checkAndRedirect() {
-            const { dispatch } = this.props
+            const { dispatch, user } = this.props
+            const { role, redirectTo } = options
 
-            if(!this.props.user) {
-                dispatch(push('/signin'))
+            if(!user || !user.role === role) {
+                dispatch(push(redirectTo || '/signin'))
             }
         }
 
