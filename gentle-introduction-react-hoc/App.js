@@ -1,5 +1,5 @@
 function App(props) {
     return (
-        <TodoList todos={props} />
+        <TodoListThree todos={props} isLoadingTodos={props.isLoadingTodos} />
     )
 }
