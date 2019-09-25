@@ -1,44 +1,29 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {
-  TextField, 
-  List, 
-  ListItem, 
-  Divider
-} from 'material-ui'
-import crayola from '../resources/crayola.json'
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
+import { TextField, List, ListItem, Divider } from 'material-ui'
+import { observer } from 'mobx-react';
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {colors: [], query: ''};
-    }
-
-    search = () => {
-        const results = crayola.filter(color => color.name.toLowerCase().includes(this.state.query.toLowerCase()));
-        this.setState({colors: results});
+export default observer(class App extends Component {
+    static propTypes = {
+        colors: React.PropTypes.object.isRequired
     };
-
     handleKeyDown = (event) => {
         const ENTER_KEY = 13;
         if (event.keyCode === ENTER_KEY) {
             event.preventDefault();
-            this.search();
+            this.props.colors.search();
         }
     };
-
     handleQueryChange = (event, value) => {
-        this.setState({query: value});
+        this.props.colors.updateQuery(value);
     };
 
-  render() {
-        const listItems = this.state.colors.map((color, index) => {
+    render() {
+        const listItems = this.props.colors.results.map((color, index) => {
             return (
-                <div>
+                <div key={`color-div-${index}`}>
                     <ListItem key={`color-${index}`} primaryText={color.name} style={{backgroundColor: color.hex} }/>
-                    <Divider/>
+                    <Divider key={`divider-${index}`}/>
                 </div>
             );
         });
@@ -48,7 +33,7 @@ class App extends Component {
                     <TextField hintText="Search..."
                                floatingLabelFixed={true}
                                fullWidth={true}
-                               value={this.state.query}
+                               value={this.props.colors.query}
                                onChange={this.handleQueryChange}
                                onKeyDown={this.handleKeyDown}/>
                     <List>
@@ -58,9 +43,4 @@ class App extends Component {
             </MuiThemeProvider>
         );
     }
-}
-export default App;
-
-
-
-
+});

@@ -1,5 +1,5 @@
 import {extendObservable, runInAction} from 'mobx'
-import crayola from '../resources/crayola.json'
+import crayola from './resources/crayola.json'
 
 export default class Colors {
     constructor() {
