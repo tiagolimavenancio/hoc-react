@@ -1,3 +1,5 @@
+import { compose } from 'recompose'
+
 function TodoList({ todos, isLoadingTodos }) {
     return (
         <div>
@@ -6,12 +8,12 @@ function TodoList({ todos, isLoadingTodos }) {
     )
 }
 
-const TodoListOne = withTodosEmpty(TodoList)
-const TodoListTwo = withTodosNull(TodoListOne)
-const TodoListThree = withLoadingIndicator(TodoListTwo)
+const withConditionalRenderings = compose(
+    withLoadingIndicator,
+    withTodosNull,
+    withTodosEmpty
+)
 
-// OR
+const TodoListWithConditionalRendering = withConditionalRenderings(TodoList)
 
-const TodoListWithConditionalRendering = withLoadingIndicator(withTodosNull(withTodosEmpty(TodoList)))
-
-export default TodoListThree // TodoListWithConditionalRendering
+export default TodoListWithConditionalRendering
