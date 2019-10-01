@@ -46,3 +46,10 @@ class ComponentNeedingStorage extends React.Component {
 const WrappedComponent = withStorage(ComponentNeedingStorage);
 
 export default WrappedComponent;
+
+Dentro do componentDidMount do nosso componente agrupado, 
+primeiro tentamos acessar o nome de usuário e o favoriteMovie em localStorage. 
+Se os valores não existirem, fazemos nossa chamada de API cara chamada 
+this.props.reallyLongApiCall. Quando essa função retornar, 
+salvamos o nome de usuário e o favorito em localStorage e 
+atualizamos o estado do componente para exibi-los na tela.
